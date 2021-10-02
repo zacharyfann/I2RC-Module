@@ -15,12 +15,13 @@ package frc.robot;
 public final class Constants {
 
     public static final class DriveTrainPorts {
-        public static final int LeftDriveTalonPort = 1;
-        public static final int RightDriveTalonPort = 2;
+        public static final int LeftDriveTalonPort = 2;
+        public static final int RightDriveTalonPort = 3;
     } 
 
     public static final class JoystickAxis {
         public static final int YAxis = 1;
+        public static final int XAxis = 0;
     } 
 
 
