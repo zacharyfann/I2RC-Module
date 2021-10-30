@@ -12,16 +12,16 @@ import frc.robot.subsystems.DriveTrain;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class TimeDrive extends CommandBase {
+public class DriveForward extends CommandBase {
   private final DriveTrain driveTrain;
-  private final Timer timer;
+  private double distance;
+  
 
   /** Creates a new TimeDrive. */
 
-  public TimeDrive(DriveTrain dt) {
-    timer = new Timer();
-
+  public DriveForward(DriveTrain dt, double NewDistance) {
       driveTrain = dt;
+      distance = NewDistance;
       addRequirements(driveTrain);
     }
     // Use addRequirements() here to declare subsystem dependencies.
@@ -30,29 +30,31 @@ public class TimeDrive extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    timer.start();
-    timer.reset();
+    
+    
   }
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(timer.get() <= 3) {
-      driveTrain.tankDrive(0.8, 0.8);
-    }
+
+      driveTrain.tankDrive(0.3, 0.3);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    driveTrain.tankDrive(0,0);
+    driveTrain.resetEncoders();
+  
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (timer.get() > 5) {
-      return true;
+    if (driveTrain.getPosition() >= distance) {
+     return true;
     }
-    else {
-      return false;
-    }
+    return false;
+    
   }
 }

@@ -12,16 +12,22 @@ import frc.robot.subsystems.DriveTrain;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
-public class TimeDrive extends CommandBase {
+public class TurnAngle extends CommandBase {
   private final DriveTrain driveTrain;
-  private final Timer timer;
+  private double angle;
+  private int constant = 1;
+  
 
   /** Creates a new TimeDrive. */
 
-  public TimeDrive(DriveTrain dt) {
-    timer = new Timer();
-
+  public TurnAngle(DriveTrain dt, double NewAngle) {
       driveTrain = dt;
+      angle = NewAngle;
+      if (angle >= 0) {
+        constant = 1;
+      } else {
+        constant = -1;
+      }
       addRequirements(driveTrain);
     }
     // Use addRequirements() here to declare subsystem dependencies.
@@ -30,29 +36,30 @@ public class TimeDrive extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    timer.start();
-    timer.reset();
+    driveTrain.resetGyro();
+    
   }
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(timer.get() <= 3) {
-      driveTrain.tankDrive(0.8, 0.8);
-    }
+      driveTrain.tankDrive(0.5 * constant, -0.5 * constant);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+    driveTrain.tankDrive(0,0);
+    driveTrain.resetEncoders();
+  
+  }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (timer.get() > 5) {
-      return true;
+    if (Math.abs(driveTrain.getnavAngle()) >= Math.abs(angle)) {
+     return true;
     }
-    else {
-      return false;
-    }
+    return false;
+    
   }
 }

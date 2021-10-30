@@ -16,16 +16,12 @@ import frc.robot.Constants;
 import com.kauailabs.navx.frc.AHRS;
 public class DriveTrain extends SubsystemBase {
 private AHRS navx = new AHRS(SPI.Port.kMXP);
-
-
-
-  
-
-
   
 
   private final WPI_TalonSRX _leftDriveTalon;
   private final WPI_TalonSRX _righttDriveTalon;
+  private double circumference = 47.12; // in centimeters
+  private final int ticksInOneRevolution = 4096;
 
   private DifferentialDrive _diffDrive;
 
@@ -56,18 +52,25 @@ private AHRS navx = new AHRS(SPI.Port.kMXP);
 
   }
   public void resetEncoders() {
-    _leftDriveTalon.setSelectedSensorPosition(0, 0, 10);
-    _righttDriveTalon.setSelectedSensorPosition(0, 0, 10);
+    _leftDriveTalon.setSelectedSensorPosition(0, 0, 1);
+    _righttDriveTalon.setSelectedSensorPosition(0, 0, 1);
   }
 public double getPosition () {
- return   (_leftDriveTalon.getSelectedSensorPosition(0) + (_righttDriveTalon.getSelectedSensorPosition(0)))/2 ;
+ return   ((_leftDriveTalon.getSelectedSensorPosition(0) + (_righttDriveTalon.getSelectedSensorPosition(0)))/2)*(circumference/ticksInOneRevolution);
  
 } 
 public double getVelocity () {
- return (_leftDriveTalon.getSensorCollection().getPulseWidthVelocity()) + (_leftDriveTalon.getSensorCollection().getPulseWidthVelocity()/2);
+ return (_leftDriveTalon.getSensorCollection().getPulseWidthVelocity()) + (_leftDriveTalon.getSensorCollection().getPulseWidthVelocity()/2)*(circumference/ticksInOneRevolution);
+
+}
+public double getnavAngle () {
+  return (navx.getAngle());
+  
+}
+public void resetGyro () {
+  navx.reset();
 }
 public void arcadeDrive(double speed, double rotation){
     _diffDrive.arcadeDrive(speed, rotation);
   }
-}
 }

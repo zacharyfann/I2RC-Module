@@ -37,7 +37,7 @@ public class TimeDrive extends CommandBase {
   @Override
   public void execute() {
     if(timer.get() <= 3) {
-      driveTrain.tankDrive(0.8, 0.8);
+      driveTrain.tankDrive(0.3, 0.3);
     }
   }
 
